@@ -3,8 +3,8 @@ title: 'Course Project: Linear Regression'
 author: "S. Servaes"
 date: "18/10/2019"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -114,4 +114,11 @@ Figure 2 - Correlation plot (abs):
 
 ```{r out.width="80%", echo=FALSE}
 ggplot2
+```
+
+Figure 3 - Residuals:
+
+```{r, echo=FALSE}
+par(mfrow = c(2,2))
+plot(lmmodel2)
 ```
