@@ -1,7 +1,7 @@
 ---
 title: "Course Project: Linear Regression"
 author: "S. Servaes"
-date: "5/13/2019"
+date: "18/10/2019"
 output: html_document
 ---
 
@@ -13,6 +13,9 @@ data(mtcars)
 ```
 
 # Summary
+This report will examine the mtcars data set and explore the relationship between miles per gallon (MPG) and transmission type. Specifically, this project will examine: 1) Is an automatic or manual transmission better for MPG; and 2) Quantify the difference between automatic and manual transmissions.
+
+Results indicate that vehicles with automatic transmissions have fuel mileage significantly lower than vehicles with manual transmissions. Regression analysis demonstrates that the MPG of a vehicle can be predicted given the weight, displacement, number of cylinders and the transmission type. Based on the best-fit regression model it can be said that vehicles with manual transmissions do give 0.14 miles per gallon more than vehicles with automatic transmissions.
 
 # Exploratory Data Analysis
 ## Dataset
@@ -80,21 +83,21 @@ The significant variables in the analysis of variance are cyl, disp and wt. This
 Both cyl, disp and wt have p-values lower than 0.05 in the analysis of variance, suggesting these possibly influence mpg. Therefore these variables were chosen to be included in the model and are then compared to the previous model with anova.
 
 ```{r multi_lin}
-lmmodel2 <- lm(mpg~am + cyl + disp + wt, data = mtcars)
+lmmodel2 <- lm(mpg ~ am + cyl + disp + wt, data = mtcars)
 summary (lmmodel2)
 anova(lmmodel1, lmmodel2)
 ```
 
-The R-squared of the new model, lmmodel2, is 0.8376. Therefore the new model manages to explain 83.76% of the variance. According to the Anova this was a significantly better fit than the initial model only including am as a variable. Therefore, cyl, disp and wt affect the correlation between mpg and am. The difference between automatic and manual transmission is 0.14 MPG.
+The R-squared of the new model, lmmodel2, is 0.8376. Therefore the new model manages to explain 83.76% of the variance. According to the Anova this was a significantly better fit than the initial model only including am as a variable. Therefore, cyl, disp and wt affect the correlation between mpg and am. Automatic cars have 0.14 MPG less then cars with manual transmission, when these confounding variables are taken into account.
 
 # Conclusion
 **Is an automatic or manual transmission better for MPG?**
 
-It initially appeared that manual transmission cars have a better MPG compared to automatic cars. However when including confounding variables like the amount of cylinders, displacement and weight, this difference strongly reduces. a big part of the difference is explained by other variables.
+It initially appeared that manual transmission cars have a better MPG compared to automatic cars. However when including confounding variables such as the amount of cylinders, displacement and weight, this difference is strongly reduced, though still in the favour of the cars with manual transmission. A large part of the difference is therefore explained by other variables.
 
 **Quantify the MPG difference between automatic and manual transmissions**
 
-Analysis has shown that when only the transmission was used in the model, manual cars have an mpg decrease of 7.25. However, when variables wt and hp are included, the manual car advantage drops to only 0.14 as the other variables (such as the amount of cylinders, the displacement and the weight) strongly contribute to this effect.
+Analysis has shown that when only the transmission was used in the model, manual cars have an MPG increase of 7.25. However, when variables wt and hp are included, the manual car advantage drops to only 0.14 MPG as the other variables (such as the amount of cylinders, the displacement and the weight) strongly contribute to this effect.
 
 # APPENDIX
 
