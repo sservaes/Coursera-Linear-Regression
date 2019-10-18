@@ -1,0 +1,74 @@
+---
+title: "Quiz 3"
+author: "S. Servaes"
+date: "3/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+library(ggplot2)
+```
+
+## Question 1
+
+```{r question 1}
+data(mtcars)
+fit <- lm(mpg ~ factor(cyl) + wt, mtcars)
+summary(fit)$coefficients
+```
+
+Answer is -6.0709.
+
+## Question 2
+
+```{r question 2}
+data(mtcars)
+fit1 <- lm(mpg ~ factor(cyl), mtcars)
+fit2 <- lm(mpg ~ factor(cyl) + wt, mtcars)
+
+summary(fit1)$coefficients
+summary(fit2)$coefficients
+```
+
+Holding weight constant, cylinders appear to have less of an impact on mpg than if weight is disregarded.
+
+## Question 3
+
+```{r question 3}
+data(mtcars)
+fit1 <- lm(mpg ~ factor(cyl) + wt, mtcars)
+fit2 <- lm(mpg ~ factor(cyl) * wt, mtcars)
+anova(fit1, fit2)
+```
+
+The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, which suggests that the interaction terms may not be necessary.
+
+## Question 4
+
+The estimated expected change in MPG per one ton increase in weight for for a specific number of cylinders (4, 6, 8).
+
+## Question 5
+
+```{r question 5}
+x <- c(0.586, 0.166, -0.042, -0.614, 11.72)
+y <- c(0.549, -0.026, -0.127, -0.751, 1.344)
+
+fit <- lm(y ~x)
+hatvalues(fit)
+plot(fit, 4)
+```
+
+Answer is 0.9946.
+
+## Question 5
+
+```{r question 5}
+x <- c(0.586, 0.166, -0.042, -0.614, 11.72)
+y <- c(0.549, -0.026, -0.127, -0.751, 1.344)
+
+fit <- lm(y ~x)
+dfbetas(fit)
+```
+
+Answer is -133.82.

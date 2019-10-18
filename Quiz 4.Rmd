@@ -1,0 +1,90 @@
+---
+title: "Quiz 3"
+author: "S. Servaes"
+date: "5/13/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+library(ggplot2)
+library(MASS)
+library(dplyr)
+```
+
+## Question 1
+```{r question 1}
+data(shuttle)
+shuttle2 <- shuttle
+shuttle2$auto <- as.numeric(shuttle2$use=="auto")
+
+logreg1 <- glm(auto~factor(wind)-1, family = binomial(link="logit"), data=shuttle2)
+Coeffs <- summary(logreg1)$coef
+LogoddRatioHeadTail <- Coeffs[1,1]-Coeffs[2,1]
+oddRatioHeadTail <- exp(LogoddRatioHeadTail)
+oddRatioHeadTail
+```
+The answer is 0.9686888
+
+## Question 2
+```{r question 2}
+logreg2 <- glm(auto~factor(wind)+factor(magn)-1, family = binomial(link="logit"), data=shuttle2)
+Coeffs <- summary(logreg2)$coef
+LogoddRatioHeadTail <- Coeffs[1,1]-Coeffs[2,1]
+oddRatioHeadTail <- exp(LogoddRatioHeadTail)
+oddRatioHeadTail
+```
+
+The answer is 0.9684981.
+
+## Question 3
+```{r question 3}
+logreg3 <- glm(auto~factor(wind), family = binomial(link="logit"), data=shuttle2)
+summary(logreg3)$coef
+
+logreg4 <- glm(1-auto~factor(wind), family = binomial(link="logit"), data=shuttle2)
+summary(logreg4)$coef
+```
+
+The coefficients reverser their sign.
+
+## Question 4
+```{r question 4}
+data("InsectSprays")
+poisreg1 <- glm(count~factor(spray)-1, family=poisson(link="log"), data=InsectSprays)
+poisregcoef1 <- summary(poisreg1)$coef
+poisregcoef1
+
+rateSprayASprayB <- exp(poisregcoef1[1,1]-poisregcoef1[2,1])
+rateSprayASprayB
+```
+
+The answer is 0.9457
+
+## Question 5
+The coefficient is unchanged.
+
+## Question 6
+```{r question 6}
+x <- -5:5
+y <- c(5.12, 3.93, 2.67, 1.87, 0.52, 0.08, 0.93, 2.05, 2.54, 3.87, 4.97)
+
+plot(x,y)
+lm1 <- lm(y[1:6]~x[1:6])
+lm2 <- lm(y[6:11]~x[6:11])
+
+abline(lm1,col="blue",lw=2)
+abline(lm2,col="blue",lw=2)
+knot <- c(0)
+splineterm <- sapply(knot,function(knot) ((x>knot)*(x-knot)))
+mat <- cbind(1,x,splineterm)
+linreg6 <- lm(y~mat-1)
+pred6 <- predict(linreg6)
+lines(x,pred6,col="red")
+legend(x=-1,y=5, c("With lm","With X"),lty=c(1,1), lwd=c(2.5,2.5),col=c("blue", "red"))
+
+slope = (pred6[11]-pred6[6])/(x[11]-x[6])
+slope
+```
+
+The slope is 1.013067.

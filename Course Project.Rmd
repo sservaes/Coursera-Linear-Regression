@@ -1,0 +1,125 @@
+---
+title: "Course Project: Linear Regression"
+author: "S. Servaes"
+date: "5/13/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+library(ggplot2)
+library(reshape2)
+data(mtcars)
+```
+
+# Summary
+
+# Exploratory Data Analysis
+## Dataset
+
+First we take a look at the raw data available here by plotting the first lines. Furthermore we identify the structure of the dataset.
+```{r data}
+head(mtcars)
+str(mtcars)
+mtcars_num <- mtcars
+```
+
+## Dataset visualisation
+Now we modify the dataset changing cyl, vs, gear, carb and am into factor variables.
+```{r data_mod}
+
+mtcars$cyl  <- factor(mtcars$cyl)
+mtcars$vs   <- factor(mtcars$vs)
+mtcars$gear <- factor(mtcars$gear)
+mtcars$carb <- factor(mtcars$carb)
+mtcars$am   <- factor(mtcars$am,labels=c("Automatic","Manual"))
+
+ggplot1 <- ggplot(data = mtcars, aes(x=am, y=mpg, fill = am)) +
+                geom_point() +
+                geom_boxplot(alpha = 0.5) +
+                labs(x = "")
+```
+
+The plot shows that mpg tends to be lower in cars with an automatic gearshift.
+
+# Quantitative Analysis
+## Linear model
+
+Next thing to do is to test this difference for significance.
+
+```{r t_test}
+t.test(mpg~am, data=mtcars)
+```
+
+With a p-value of 0.001374, we can constitute that the automatic gearshift have a significantly lower mpg compared to cars with a manual gearshift.
+As the difference is significant we quantify this in the following step.
+
+```{r quantification}
+lmmodel1 <- lm(mpg~am, data = mtcars)
+summary (lmmodel1)
+```
+
+From this we can see that the average of MPG for automatic is 17.15, while the average for manual is 7.25 higher. However, as the R-squared has a value of 0.3598, this model only describes ~36% of the variation. Therefore, multivariate linear regression is needed. In order to determine which variables would be useful to be included in the model, a correlation plot of the absolute correlation coefficients and an analysis of variance was done.
+
+```{r correlation_plot}
+cor_table <- cor(mtcars_num)
+cor_table[lower.tri(cor_table, diag = TRUE)] <- NA
+cor_table_melt <- melt(cor_table)
+
+ggplot2 <- ggplot(data=cor_table_melt, aes(x=Var1, y=Var2, fill=abs(value))) +
+                geom_tile(color = "white") +
+                scale_fill_gradient(low = "yellow", high = "red")
+
+var_analysis <- aov(mpg~., data=mtcars)
+summary(var_analysis)
+```
+
+The significant variables in the analysis of variance are cyl, disp and wt. This is also clearly visible from the correlation plot. 
+
+## Multivariate Linear Regression
+Both cyl, disp and wt have p-values lower than 0.05 in the analysis of variance, suggesting these possibly influence mpg. Therefore these variables were chosen to be included in the model and are then compared to the previous model with anova.
+
+```{r multi_lin}
+lmmodel2 <- lm(mpg~am + cyl + disp + wt, data = mtcars)
+summary (lmmodel2)
+anova(lmmodel1, lmmodel2)
+```
+
+The R-squared of the new model, lmmodel2, is 0.8376. Therefore the new model manages to explain 83.76% of the variance. According to the Anova this was a significantly better fit than the initial model only including am as a variable. Therefore, cyl, disp and wt affect the correlation between mpg and am. The difference between automatic and manual transmission is 0.14 MPG.
+
+# Conclusion
+**Is an automatic or manual transmission better for MPG?**
+
+It initially appeared that manual transmission cars have a better MPG compared to automatic cars. However when including confounding variables like the amount of cylinders, displacement and weight, this difference strongly reduces. a big part of the difference is explained by other variables.
+
+**Quantify the MPG difference between automatic and manual transmissions**
+
+Analysis has shown that when only the transmission was used in the model, manual cars have an mpg decrease of 7.25. However, when variables wt and hp are included, the manual car advantage drops to only 0.14 as the other variables (such as the amount of cylinders, the displacement and the weight) strongly contribute to this effect.
+
+# APPENDIX
+
+Figure 1 - Data points:
+
+```{r, echo=FALSE}
+ggplot1
+```
+
+Figure 2 - Residuals:
+
+```{r, echo=FALSE}
+par(mfrow = c(2,2))
+plot(lmmodel1)
+```
+
+Figure 3 - Correlation plot (abs):
+
+```{r, echo=FALSE}
+ggplot2
+```
+
+Figure 4 - Residuals:
+
+```{r, echo=FALSE}
+par(mfrow = c(2,2))
+plot(lmmodel2)
+```
