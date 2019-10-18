@@ -3,8 +3,8 @@ title: 'Course Project: Linear Regression'
 author: "S. Servaes"
 date: "18/10/2019"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -106,13 +106,13 @@ Analysis has shown that when only the transmission was used in the model, manual
 
 Figure 1 - Data points:
 
-```{r out.width="80%", echo = FALSE}
+```{r out.width="87%", echo = FALSE}
 ggplot1
 ```
 
 Figure 2 - Correlation plot (abs):
 
-```{r out.width="80%", echo=FALSE}
+```{r out.width="87%", echo=FALSE}
 ggplot2
 ```
 
